@@ -118,7 +118,7 @@ class _BudgetTableState extends State<BudgetTable> {
     final sorted = _sortedItems;
     final currency = budgetInfo.currency.value;
 
-    final tableHeight = ((sorted.length + 2) * 52.0) + 52;
+    final tableHeight = ((sorted.length + 2) * 52.0) + 42.0;
 
     return Watch(
       (context) => ClipRRect(

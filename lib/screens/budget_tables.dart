@@ -21,7 +21,7 @@ class _BudgetTablesPageState extends State<BudgetTablesPage> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isLarge = constraints.maxWidth > 1000;
+        final isLarge = constraints.maxWidth > 600;
         return Scaffold(
           appBar: AppBar(title: const Text("Budget Tables")),
           drawer: AppDrawer(),
@@ -41,15 +41,19 @@ class _BudgetTablesPageState extends State<BudgetTablesPage> {
 }
 
 class MobileLayout extends StatelessWidget {
+  const MobileLayout({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.all(20),
         child: ListView(
+
       children: [
         Text(
           "Budget for ${budgetInfo.name.value.isNotEmpty ? budgetInfo.name.value : 'You'} of ${months[budgetInfo.budgetDate.value.month]} ${budgetInfo.budgetDate.value.year}",
           style: TextStyle(fontSize: 25),
+          textAlign: .center,
         ),
         BudgetList(
           items: budgetInfo.incomeItems.value,
@@ -84,6 +88,7 @@ class DesktopLayout extends StatelessWidget {
             "Budget for ${budgetInfo.name.value.isNotEmpty ? budgetInfo.name.value : 'You'} of ${months[budgetInfo.budgetDate.value.month]} ${budgetInfo.budgetDate.value.year}",
             style: TextStyle(fontSize: 25),
           ),
+          SizedBox(height: 10),
           BudgetTable(
             items: budgetInfo.incomeItems.value,
             itemTableLabel: 'Income Source',
@@ -105,6 +110,8 @@ class DesktopLayout extends StatelessWidget {
 }
 
 class IncomeTotalTile extends StatefulWidget {
+  const IncomeTotalTile({super.key});
+
   @override
   State<StatefulWidget> createState() => _IncomeTotalTileState();
 }
@@ -167,6 +174,8 @@ class _IncomeTotalTileState extends State<IncomeTotalTile> {
   );
 }
 class ExpenseTotalTile extends StatefulWidget {
+  const ExpenseTotalTile({super.key});
+
   @override
   State<StatefulWidget> createState() => _ExpenseTotalTileState();
 }

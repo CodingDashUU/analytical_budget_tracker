@@ -45,7 +45,7 @@ class MobileLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.all(20),
-        child: Column(
+        child: ListView(
       children: [
         Text(
           "Budget for ${budgetInfo.name.value.isNotEmpty ? budgetInfo.name.value : 'You'} of ${months[budgetInfo.budgetDate.value.month]} ${budgetInfo.budgetDate.value.year}",
@@ -56,14 +56,13 @@ class MobileLayout extends StatelessWidget {
           budgetType: BudgetType.income,
           onDelete: (item) => budgetInfo.incomeItems.value.remove(item)
         ),
+        IncomeTotalTile(),
         SizedBox(height: 30),
         BudgetList(
           items: budgetInfo.expenseItems.value,
           budgetType: BudgetType.expense,
             onDelete: (item) => budgetInfo.expenseItems.value.remove(item)
         ),
-        Spacer(),
-        IncomeTotalTile(),
         ExpenseTotalTile(),
         SizedBox(height: 30),
       ],

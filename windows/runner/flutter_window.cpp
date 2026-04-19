@@ -70,7 +70,7 @@ FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
 
           // Optional: Set minimum dimensions so the window doesn't disappear
           mmi->ptMinTrackSize.x = 800;
-          mmi->ptMinTrackSize.y = 600;
+          mmi->ptMinTrackSize.y = 800;
 
           return 0;
         }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/budget_item.dart';
 import '../models/budget_type.dart';
 import '../state/budget_info.dart';
+import 'package:collection/collection.dart';
 
 class BudgetList extends StatefulWidget {
   final List<BudgetItem> items;
@@ -29,28 +30,22 @@ class _BudgetListState extends State<BudgetList> {
   Widget build(BuildContext context) {
     if (widget.items.isEmpty) return _EmptyState(budgetType: widget.budgetType,);
 
-    return Expanded(
-      child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        physics: const BouncingScrollPhysics(), // Better feel on both OSs
-        itemCount: widget.items.length,
-        itemBuilder: (context, index) {
-          final item = widget.items[index];
-
-          return  Dismissible(
-            key: Key(widget.items[index].name),
-            direction: DismissDirection.startToEnd,
-            onDismissed: (_) => setState(() => widget.items.removeAt(index)),
-            background: _buildSwipeBackground(),
-            child: _BudgetCard(
-              item: item,
-              formattedAmount: _format(item.amount),
-              onTap: () => widget.onTap?.call(item),
-              budgetType: widget.budgetType
-            ),
-          );
-        },
-      ),
+    return Column(
+      children: widget.items.mapIndexed(
+              (index, item) =>
+                  Dismissible(
+                    key: Key(widget.items[index].name),
+                    direction: DismissDirection.startToEnd,
+                    onDismissed: (_) => setState(() => widget.items.removeAt(index)),
+                    background: _buildSwipeBackground(),
+                    child: _BudgetCard(
+                        item: item,
+                        formattedAmount: _format(item.amount),
+                        onTap: () => widget.onTap?.call(item),
+                        budgetType: widget.budgetType
+                    ),
+                  )
+      ).toList()
     );
   }
 

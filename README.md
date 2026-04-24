@@ -83,7 +83,6 @@ powershell.exe -ExecutionPolicy Bypass -File .\build_w.ps1
     - If your screen is bigger you can optionally enable it with the FAB (Floating Action Button) at the bottom right corner of your screen
     - #### Deleting
       - To delete a specific item, just swipe it from the left to right
-      - **BUG**: When you delete an item, the total amount doesn't change until you exit the page and re-enter
 ### Budget Analysis
 ![Budget Analysis](doc_images/budget_analysis.png)
 #### What's being analyzed?

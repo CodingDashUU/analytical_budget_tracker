@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:signals/signals_flutter.dart';
 import '../models/budget_item.dart';
 import '../models/budget_type.dart';
+import '../state/analysis_model.dart';
 import '../state/budget_info.dart';
 import 'package:collection/collection.dart';
 
 class BudgetList extends StatefulWidget {
-  final List<BudgetItem> items;
   final BudgetType budgetType;
   final Function(BudgetItem)? onDelete;
   final Function(BudgetItem)? onTap;
 
   const BudgetList({
     super.key,
-    required this.items,
     this.onDelete,
     this.onTap, required this.budgetType,
   });
@@ -23,20 +23,21 @@ class BudgetList extends StatefulWidget {
 class _BudgetListState extends State<BudgetList> {
 
   String _format(double amount) {
-    return '${budgetInfo.currency.value.isNotEmpty ? "${budgetInfo.currency.value} " : ""}${amount.toStringAsFixed(2)}';
+    return '${budgetInfo.currency.isNotEmpty ? "${budgetInfo.currency} " : ""}${amount.toStringAsFixed(2)}';
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.items.isEmpty) return _EmptyState(budgetType: widget.budgetType,);
+    if (widget.budgetType.items.isEmpty) return _EmptyState(budgetType: widget.budgetType,);
 
-    return Column(
-      children: widget.items.mapIndexed(
+    return Watch((context) => Column(
+      children: [
+        ...widget.budgetType.items.value.mapIndexed(
               (index, item) =>
                   Dismissible(
-                    key: Key(widget.items[index].name),
+                    key: Key(widget.budgetType.items.value[index].name),
                     direction: DismissDirection.startToEnd,
-                    onDismissed: (_) => setState(() => widget.items.removeAt(index)),
+                    onDismissed: (_) => setState(() => widget.budgetType.items.removeAt(index)),
                     background: _buildSwipeBackground(),
                     child: _BudgetCard(
                         item: item,
@@ -45,8 +46,10 @@ class _BudgetListState extends State<BudgetList> {
                         budgetType: widget.budgetType
                     ),
                   )
-      ).toList()
-    );
+      ),
+        BudgetTotalTile(budgetType: widget.budgetType,)
+      ]
+    ));
   }
 
   Widget _buildSwipeBackground() {
@@ -179,4 +182,131 @@ class _EmptyState extends StatelessWidget {
       ),
     );
   }
+}
+
+class BudgetTotalTile extends StatelessWidget {
+  final BudgetType budgetType;
+  const BudgetTotalTile({super.key, required this.budgetType});
+
+  @override
+  Widget build(BuildContext context) => Container(
+    margin: const EdgeInsets.symmetric(vertical: 8),
+    decoration: BoxDecoration(
+      color: Theme.of(context).cardColor,
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: () => {},
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Icon(budgetType == BudgetType.income ? Icons.arrow_upward : Icons.arrow_downward,
+                color: budgetType == BudgetType.income ? Colors.lightGreenAccent : Colors.redAccent),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Total",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    budgetType.representation, // Or item.category
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            Watch(
+                (context) =>
+            Text(
+              "${budgetInfo.currency.value.isNotEmpty ? "${budgetInfo.currency.value} " : ""}${budgetType.items.value.map((e) => e.amount)
+                  .fold(0.0, (a, b) => a + b).toStringAsFixed(2)}",
+              style: TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 16,
+                color: budgetType.representationColor,
+            ))),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+class ExpenseTotalTile extends StatefulWidget {
+  const ExpenseTotalTile({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _ExpenseTotalTileState();
+}
+
+class _ExpenseTotalTileState extends State<ExpenseTotalTile> {
+  @override
+  Widget build(BuildContext context) => Watch((context) => Container(
+    margin: const EdgeInsets.symmetric(vertical: 8),
+    decoration: BoxDecoration(
+      color: Theme.of(context).cardColor,
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: () => {},
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Icon(Icons.arrow_downward, color: Colors.redAccent),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Total",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "Expense", // Or item.category
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+                "${budgetInfo.currency.value.isNotEmpty ? "${budgetInfo.currency.value} " : ""}${analysisModel.totalExpenses.toStringAsFixed(2)}",
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 16,
+                  color: BudgetType.expense.representationColor,
+                )),
+          ],
+        ),
+      ),
+    ),
+  ));
 }

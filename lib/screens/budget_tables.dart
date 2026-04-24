@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
 import '../models/budget_type.dart';
 import '../models/months.dart';
-import '../state/analysis_model.dart';
 import '../state/budget_info.dart';
 import '../widgets/budget_list.dart';
 import '../widgets/budget_table.dart';
@@ -56,18 +54,14 @@ class MobileLayout extends StatelessWidget {
           textAlign: .center,
         ),
         BudgetList(
-          items: budgetInfo.incomeItems.value,
           budgetType: BudgetType.income,
           onDelete: (item) => budgetInfo.incomeItems.value.remove(item)
         ),
-        IncomeTotalTile(),
         SizedBox(height: 30),
         BudgetList(
-          items: budgetInfo.expenseItems.value,
           budgetType: BudgetType.expense,
             onDelete: (item) => budgetInfo.expenseItems.value.remove(item)
         ),
-        ExpenseTotalTile(),
         SizedBox(height: 30),
       ],
     ));
@@ -107,133 +101,4 @@ class DesktopLayout extends StatelessWidget {
       ),
     ));
   }
-}
-
-class IncomeTotalTile extends StatefulWidget {
-  const IncomeTotalTile({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _IncomeTotalTileState();
-}
-
-class _IncomeTotalTileState extends State<IncomeTotalTile> {
-  @override
-  Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.symmetric(vertical: 8),
-    decoration: BoxDecoration(
-      color: Theme.of(context).cardColor,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 10,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: InkWell(
-      borderRadius: BorderRadius.circular(16),
-      onTap: () => {},
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Icon(Icons.arrow_upward, color: Colors.lightGreenAccent),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Total",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "Income", // Or item.category
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-            Text(
-              "${budgetInfo.currency.value.isNotEmpty ? "${budgetInfo.currency.value} " : ""}${analysisModel.totalIncome}",
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 16,
-                color: BudgetType.income.representationColor,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-class ExpenseTotalTile extends StatefulWidget {
-  const ExpenseTotalTile({super.key});
-
-  @override
-  State<StatefulWidget> createState() => _ExpenseTotalTileState();
-}
-
-class _ExpenseTotalTileState extends State<ExpenseTotalTile> {
-  @override
-  Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.symmetric(vertical: 8),
-    decoration: BoxDecoration(
-      color: Theme.of(context).cardColor,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 10,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: InkWell(
-      borderRadius: BorderRadius.circular(16),
-      onTap: () => {},
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Icon(Icons.arrow_downward, color: Colors.redAccent),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Total",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "Expense", // Or item.category
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-            Text(
-              "${budgetInfo.currency.value.isNotEmpty ? "${budgetInfo.currency.value} " : ""}${analysisModel.totalExpenses}",
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 16,
-                color: BudgetType.expense.representationColor,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
 }

@@ -15,9 +15,9 @@ class VerdictCard extends StatelessWidget {
 
     return [
         Text("Total Income", style: TextStyle(fontSize: s.label, color: Colors.white, fontWeight: FontWeight.w400)),
-        Text("${budgetInfo.currency.value.isNotEmpty ? "${budgetInfo.currency.value} " : ""}${analysisModel.totalIncome.toStringAsFixed(2)}", style: TextStyle(fontSize: s.value, fontWeight: FontWeight.w600, color: Colors.green)),
+        Text("${budgetInfo.currency.value.isNotEmpty ? "${budgetInfo.currency.value} " : ""}${analysisModel.totalIncome.value.toStringAsFixed(2)}", style: TextStyle(fontSize: s.value, fontWeight: FontWeight.w600, color: Colors.green)),
         Text("Total Expenses", style: TextStyle(fontSize: s.label, color: Colors.white, fontWeight: FontWeight.w400)),
-        Text("${budgetInfo.currency.value.isNotEmpty ? "${budgetInfo.currency.value} " : ""}${analysisModel.totalExpenses.toStringAsFixed(2)}", style: TextStyle(fontSize: s.value, fontWeight: FontWeight.w600, color: Colors.red)),
+        Text("${budgetInfo.currency.value.isNotEmpty ? "${budgetInfo.currency.value} " : ""}${analysisModel.totalExpenses.value.toStringAsFixed(2)}", style: TextStyle(fontSize: s.value, fontWeight: FontWeight.w600, color: Colors.red)),
         Text("${budgetInfo.currency.value.isNotEmpty ? "${budgetInfo.currency.value} " : ""}${analysisModel.verdict.toStringAsFixed(2)}", style: TextStyle(fontSize: s.verdict, fontWeight: FontWeight.w600, color: analysisModel.verdictColor)),
         Text(analysisModel.verdictText, style: TextStyle(fontSize: s.verdictText, fontWeight: FontWeight.w800, color: analysisModel.verdictColor)),
       ];

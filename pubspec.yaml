@@ -41,6 +41,7 @@ dependencies:
   flutter_signals: ^0.0.1
   data_table_2: ^2.7.2
   fl_chart: ^1.2.0
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
@@ -94,3 +95,18 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  image_path: "assets/icon.png"
+  adaptive_icon_foreground: "assets/icon.png"
+  adaptive_icon_background: "#121212"
+  # Web Configuration
+  web:
+    generate: true
+    image_path: "assets/icon.png"
+
+  # Windows Configuration
+  windows:
+    generate: true
+    image_path: "assets/icon.png"

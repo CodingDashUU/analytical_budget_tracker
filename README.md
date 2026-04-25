@@ -1,4 +1,4 @@
-# ANALYTICAL BUDGET TRACKER
+# 💰 ANALYTICAL BUDGET TRACKER
 
 An analytical budget tracker made with [Flutter](https://flutter.dev/). 
 You can input your name, your country's currency, budget date, 
@@ -27,6 +27,7 @@ powershell.exe -ExecutionPolicy Bypass -File .\build_w.ps1
 - Routing: [go_router](https://pub.dev/packages/go_router)
 - Charts: [fl_charts](https://pub.dev/packages/fl_chart)
 - Tables: [data_table_2](https://pub.dev/packages/data_table_2)
+- Icons: [flutter_launcher_icons](https://pub.dev/packages/flutter_launcher_icons)
 
 ## Features:
 ### Budget Input

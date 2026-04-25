@@ -1,14 +1,15 @@
-#!/bin/bash
 
-# 1. Download Flutter (Stable channel)
-git clone https://github.com/flutter/flutter.git -b stable
+if [ ! -d "flutter" ]; then
+    echo "[INFO] Cloning Flutter stable..."
+    git clone https://github.com/flutter/flutter.git -b stable --depth 1 --single-branch
+else
+    echo "[INFO] Flutter already exists in cache."
+fi
 
-# 2. Add Flutter to the PATH
-export PATH="$PATH:`pwd`/flutter/bin"
+export PATH="$PATH:$(pwd)/flutter/bin"
 
-# 3. Pre-cache and check version
-flutter doctor
+echo "[INFO] Pre-caching Web artifacts..."
+flutter precache --web
 
-# 4. Build the web app
-# Use --wasm if you want that extra performance boost you're likely after
-flutter build web --release
+echo "[INFO] Building Flutter Web (WASM)..."
+flutter build web --release --wasm

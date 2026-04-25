@@ -24,7 +24,7 @@ class AnalysisModel {
   double get verdict => totalIncome.value - totalExpenses.value;
   String get verdictText => switch(verdict) {
     < 0 => "LOSS",
-    0 => "BREAKTHROUGH",
+    0 => "BREAK-EVEN",
     >0 => "SURPLUS",
     _ => "ERROR",
   };

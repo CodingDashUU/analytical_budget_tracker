@@ -76,7 +76,10 @@ powershell.exe -ExecutionPolicy Bypass -File .\build_w.ps1
       - Pressing the X All button next to Total would delete the entire table
       - There is no confirmation for any of this
     - ##### The SAVE button
-      - Currently not implemented, for now it has the same functionality as the EDIT button, adding soon!
+      - Web
+        - Will save your items to your Downloads folder as JSON
+      - Windows
+        - Not Implemented 
   - #### List View
   ![Budget List Income](doc_images/budget_list_income.png)
   ![Budget List Expense](doc_images/budget_list_expense.png)

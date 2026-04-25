@@ -1,21 +1,25 @@
+import 'dart:convert';
+
 import 'package:data_table_2/data_table_2.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../models/budget_item.dart';
+import '../models/budget_type.dart';
 import '../state/budget_info.dart';
-
+import 'package:flutter/foundation.dart';
 enum _SortOrder { none, asc, desc }
 
 class BudgetTable extends StatefulWidget {
-  final List<BudgetItem> items;
+  final BudgetType type;
   final String itemTableLabel;
   final String amountTableLabel;
   final Color headerColor;
 
   const BudgetTable({
     super.key,
-    required this.items,
+    required this.type,
     required this.itemTableLabel,
     required this.amountTableLabel,
     required this.headerColor,
@@ -32,8 +36,8 @@ class _BudgetTableState extends State<BudgetTable> {
   bool isVisible = false;
 
   List<BudgetItem> get _sortedItems {
-    if (_sortOrder == _SortOrder.none) return widget.items;
-    final sorted = [...widget.items];
+    if (_sortOrder == _SortOrder.none) return widget.type.items.value;
+    final sorted = [...widget.type.items.value];
     sorted.sort((a, b) {
       final cmp = _sortColumnIndex == 0
           ? a.name.compareTo(b.name)
@@ -58,7 +62,7 @@ class _BudgetTableState extends State<BudgetTable> {
     });
   }
 
-  double get _total => widget.items.fold(0.0, (sum, e) => sum + e.amount);
+  double get _total => widget.type.items.value.fold(0.0, (sum, e) => sum + e.amount);
 
   Color _rowColor(int index, Set<WidgetState> states) {
     final theme = Theme.of(context);
@@ -189,7 +193,7 @@ class _BudgetTableState extends State<BudgetTable> {
                             DataCell(
                               IconButton(
                                 onPressed: () => setState(() {
-                                  widget.items.removeAt(i);
+                                  widget.type.items.value.removeAt(i);
                                 }),
                                 icon: Icon(Icons.close),
                                 color: Colors.red,
@@ -231,7 +235,7 @@ class _BudgetTableState extends State<BudgetTable> {
                           DataCell(
                             IconButton(
                               onPressed: () => setState(() {
-                                    widget.items.clear();
+                                    widget.type.items.value.clear();
                               }),
                               icon: Column(
                                 children: [
@@ -260,10 +264,23 @@ class _BudgetTableState extends State<BudgetTable> {
                     }),
                     child: Text("Edit"),
                   ),
+                  if (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)
                   TextButton(
-                    onPressed: () => setState(() {
-                      isVisible = !isVisible;
-                    }),
+                    onPressed: () async {
+                      if (kIsWeb) {
+                        var json = Uint8List.fromList(utf8.encode(jsonEncode(widget.type.items.value)));
+                        await FileSaver.instance.saveFile(
+                          name: widget.type.representation.toLowerCase(),
+                          bytes: json,
+                          mimeType: MimeType.json,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Successfully saved ${widget.type.representation.toLowerCase()}.json to Downloads', style: TextStyle(color: Colors.white)),
+                            backgroundColor: Colors.green, duration: Duration(seconds: 1),
+                          ),
+                        );
+                      }
+                    },
                     child: Text("Save"),
                   ),
                 ],

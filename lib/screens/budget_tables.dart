@@ -84,14 +84,14 @@ class DesktopLayout extends StatelessWidget {
           ),
           SizedBox(height: 10),
           BudgetTable(
-            items: budgetInfo.incomeItems.value,
+            type: BudgetType.income,
             itemTableLabel: 'Income Source',
             amountTableLabel: 'Amount',
             headerColor: Colors.green,
           ),
           SizedBox(height: 30),
           BudgetTable(
-            items: budgetInfo.expenseItems.value,
+            type: BudgetType.expense,
             itemTableLabel: 'Expense Item',
             amountTableLabel: 'Cost',
             headerColor: Colors.red,

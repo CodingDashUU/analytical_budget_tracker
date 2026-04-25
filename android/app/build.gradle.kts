@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.washu.budget_tracker"
+    namespace = "com.coding_dashuu.budget_tracker"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

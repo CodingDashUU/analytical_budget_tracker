@@ -1,15 +1,14 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:file_picker/file_picker.dart';
+
 import 'package:data_table_2/data_table_2.dart';
-import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../models/budget_item.dart';
 import '../models/budget_type.dart';
+import '../services/file_service.dart';
 import '../state/budget_info.dart';
-import 'package:flutter/foundation.dart';
 enum _SortOrder { none, asc, desc }
 
 class BudgetTable extends StatefulWidget {
@@ -268,37 +267,28 @@ class _BudgetTableState extends State<BudgetTable> {
                   if (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)
                   TextButton(
                     onPressed: () async {
-                      var json = Uint8List.fromList(utf8.encode(jsonEncode(widget.type.items.value)));
+                      Uint8List bytes = Uint8List.fromList(utf8.encode(
+                          jsonEncode(widget.type.items.value)));
                       if (kIsWeb) {
-                        await FileSaver.instance.saveFile(
-                          name: widget.type.representation.toLowerCase(),
-                          bytes: json,
-                          mimeType: MimeType.json,
-                        );
+                        await FileService.saveFileWeb(bytes, widget.type
+                            .representation.toLowerCase());
+                      }
+                      else
+                      if (defaultTargetPlatform == TargetPlatform.windows) {
+                        await FileService.saveFileWindows(bytes,
+                            widget.type.representation.toLowerCase());
+                      }
+                      if (FileService.pathChosen != null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Successfully saved ${widget.type.representation.toLowerCase()}.json to Downloads', style: TextStyle(color: Colors.white)),
-                            backgroundColor: Colors.green, duration: Duration(seconds: 1),
+                          SnackBar(content: Text(
+                              'Success: Saved ${widget.type.representation
+                                  .toLowerCase()}.json to ${FileService
+                                  .pathChosen}',
+                              style: TextStyle(color: Colors.white)),
+                            backgroundColor: Colors.green,
+                            duration: Duration(seconds: 2),
                           ),
                         );
-                      }
-                      if (defaultTargetPlatform == TargetPlatform.windows) {
-                        String? path = await FilePicker.saveFile(
-                          dialogTitle: 'Save your JSON file',
-                          fileName: '${widget.type.representation.toLowerCase()}.json',
-                          type: FileType.custom,
-                          allowedExtensions: ['json'],
-                        );
-
-                        if (path != null) {
-                          // Standard dart:io save
-                          final file = File(path);
-                          await file.writeAsBytes(json);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Successfully saved ${widget.type.representation.toLowerCase()}.json to $path', style: TextStyle(color: Colors.white)),
-                              backgroundColor: Colors.green, duration: Duration(seconds: 1),
-                            ),
-                          );
-                        }
                       }
                     },
                     child: Text("Save"),

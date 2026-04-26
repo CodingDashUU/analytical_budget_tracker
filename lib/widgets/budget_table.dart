@@ -280,11 +280,21 @@ class _BudgetTableState extends State<BudgetTable> {
                       }
                       if (FileService.pathChosen != null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(
+                          SnackBar(content:
+                          Row(
+                            children: [
+                              Text(
                               'Success: Saved ${widget.type.representation
                                   .toLowerCase()}.json to ${FileService
                                   .pathChosen}',
-                              style: TextStyle(color: Colors.white)),
+                                  style: TextStyle(color: Colors.white)
+                              ),
+                              Spacer(),
+                              Icon(
+                                  Icons.check_circle_outline
+                              ),
+                            ],
+                          ),
                             backgroundColor: Colors.green,
                             duration: Duration(seconds: 2),
                           ),

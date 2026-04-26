@@ -79,7 +79,7 @@ powershell.exe -ExecutionPolicy Bypass -File .\build_w.ps1
       - Web
         - Will save your items to your Downloads folder as JSON
       - Windows
-        - Not Implemented 
+        - A file picker dialog will pop up, and will save your file to the file path specified
   - #### List View
   ![Budget List Income](doc_images/budget_list_income.png)
   ![Budget List Expense](doc_images/budget_list_expense.png)

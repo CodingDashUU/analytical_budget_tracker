@@ -64,14 +64,14 @@ powershell.exe -ExecutionPolicy Bypass -File .\build_w.ps1
 ### Budget Tables
 - At the top, it displays your name, and the date of the budget, from fields you entered in the last screen
   ![Budget Label](doc_images/budget_label.png)
-- There are 2 ways your budget can be viewed
-  - #### Tabular View
-  ![Budget Tables](doc_images/budget_tables.png) 
+  - There are 2 ways your budget can be viewed
+    - #### Tabular View
+    ![Budget Tables](doc_images/budget_tables.png)
     - This view is only available for bigger screens
-    - If your screen width is smaller than 600px, this won't be available for you  
+    - If your screen width is smaller than 600px, this won't be available for you
     - ##### The EDIT button
       - This is how you would delete your items
-      ![Budget Table Delete](doc_images/budget_table_del.png)
+        ![Budget Table Delete](doc_images/budget_table_del.png)
       - Pressing the normal X button next to each item would delete that item
       - Pressing the X All button next to Total would delete the entire table
       - There is no confirmation for any of this
@@ -80,11 +80,55 @@ powershell.exe -ExecutionPolicy Bypass -File .\build_w.ps1
         - Will save your items to your Downloads folder as JSON
       - Windows
         - A file picker dialog will pop up, and will save your file to the file path specified
+    - ##### The LOAD button
+      - ###### Platforms:
+        - Web
+          - Not implemented
+        - Windows
+          - A file picker dialog will pop up, and will load the JSON file into the tables
+      - ###### Validation:
+        - If the JSON has invalid semantics, it will simply give the following error:
+          ![Snackbar Load Error](doc_images/snackbar_load_error.png)
+        - If the JSON is valid, but any JSON object doesn't contain the 'name' or 'amount' attribute, or the attributes
+          are `null`, it will simply default to `"Item ${index}"` for `name`, or `1.0` for `amount`
+        - If the amount is written in a string (eg "15") it will simply be converted to a `double`
+        - If the amount is smaller than 1.0 or bigger than 1 000 000 000, then it will get clamped down automatically
+        - If the type `name` is anything but `string`, it will be converted to a string
+        - Any character that isn't a lower-, uppercase (a-z, A-Z) dash(-) or a whitespace character will be filtered out
+          from `name`
+        - Example JSON:
+          ```json 
+          [
+            {"name" : "Salary", "amount": 30000},
+            {"amount" : 5000, "name": "Groceries", "day" : 3},
+            {"name" : null, "amount" : null},
+            {},
+            {"name" : true, "amount": false},
+            {"name" : ["JSON", "Lists"], "amount" : -9999999999999},
+            {"name" : {"name" : " Object", "amount": 99}, "amount": 999999999999999999999999999999},
+            {"name": "Incomplete"},
+            {"name" : "fake-number", "amount": "27"},
+            {"invalid attribute" : 0},
+            {"name": "!@#$%^&*()_-+=}][{:;|\\<,>.?/Interesting--()'' Values"}
+
+          ]
+          ```
+          will transform into:
+          ![Table Random Values](doc_images/table_random_values.png)
+          - If the JSON isn't a list of JSON objects and instead is just a single one, the app will only load 1 budget
+            item
+            Example JSON:
+          ```json 
+            {"name" : "Salary", "amount": 30000}
+          ```
+          will transform into:
+          ![Table Single Value](doc_images/table_single_value.png)
   - #### List View
   ![Budget List Income](doc_images/budget_list_income.png)
   ![Budget List Expense](doc_images/budget_list_expense.png)
     - This is intended for screens smaller a width than 600px
-    - If your screen is bigger you can optionally enable it with the FAB (Floating Action Button) at the bottom right corner of your screen
+  - If your screen is bigger you can optionally enable it with the FAB (Floating Action Button) in the bottom right
+    corner of your screen
     - #### Deleting
       - To delete a specific item, just swipe it from the left to right
 ### Budget Analysis

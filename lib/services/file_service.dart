@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 
+import '../models/budget_item.dart';
 class FileService {
   static String? pathChosen;
 
@@ -18,6 +21,38 @@ class FileService {
     }
   }
 
+  static Future<FileLoad> loadFileWindows() async {
+    pathChosen = null;
+    FilePickerResult? result = await FilePicker.pickFiles(
+      dialogTitle: "Select a valid JSON file to load",
+      allowMultiple: false,
+      allowedExtensions: ["json"],
+      type: FileType.custom,
+    );
+    if (result != null && result.files.single.path != null) {
+      // Read the file from the path
+      final file = File(result.files.single.path!);
+      final String content = await file.readAsString();
+      try {
+        if (jsonDecode(content) is! List) {
+          return FileLoad(
+              FileLoadResult.success,
+              [BudgetItem.fromJson(jsonDecode(content), 0)]
+          );
+        }
+        return FileLoad(
+          FileLoadResult.success,
+          (jsonDecode(content) as List<dynamic>)
+              .mapIndexed((i, e) => BudgetItem.fromJson(e, i + 1))
+              .toList(),
+        );
+      } catch (e) {
+        return FileLoad(FileLoadResult.error, null);
+      }
+    }
+    return FileLoad(FileLoadResult.cancelled, null);
+  }
+
   static Future<void> saveFileWeb(Uint8List bytes, String fileName) async {
     pathChosen = null;
     String path = await FileSaver.instance.saveFile(
@@ -27,4 +62,13 @@ class FileService {
     );
     if (path.isNotEmpty) pathChosen = path;
   }
+}
+
+enum FileLoadResult { success, cancelled, error }
+
+class FileLoad {
+  FileLoadResult result;
+  List<BudgetItem>? items;
+
+  FileLoad(this.result, this.items);
 }

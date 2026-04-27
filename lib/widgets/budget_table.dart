@@ -124,8 +124,7 @@ class _BudgetTableState extends State<BudgetTable> {
 
     final tableHeight = ((sorted.length + 2) * 52.0) + 42.0;
 
-    return Watch(
-      (context) => ClipRRect(
+    return ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: SizedBox(
           height: tableHeight,
@@ -133,7 +132,9 @@ class _BudgetTableState extends State<BudgetTable> {
             spacing: 10,
             children: [
               Expanded(
-                child: DataTable2(
+                  child: Watch(
+                        (context) =>
+                        DataTable2(
                   decoration: BoxDecoration(
                     color: isDark ? Colors.grey[900] : Colors.white,
                     borderRadius: BorderRadius.circular(12),
@@ -255,7 +256,7 @@ class _BudgetTableState extends State<BudgetTable> {
                     ),
                   ],
                 ),
-              ),
+                  )),
               Row(
                 children: [
                   TextButton(
@@ -286,7 +287,7 @@ class _BudgetTableState extends State<BudgetTable> {
                               Text(
                               'Success: Saved ${widget.type.representation
                                   .toLowerCase()}.json to ${FileService
-                                  .pathChosen}',
+                                  .pathChosen}.',
                                   style: TextStyle(color: Colors.white)
                               ),
                               Spacer(),
@@ -303,12 +304,111 @@ class _BudgetTableState extends State<BudgetTable> {
                     },
                     child: Text("Save"),
                   ),
+                  if (defaultTargetPlatform != TargetPlatform.android &&
+                      defaultTargetPlatform != TargetPlatform.iOS)
+                    TextButton(
+                      onPressed: () async {
+                        Uint8List bytes = Uint8List.fromList(utf8.encode(
+                            jsonEncode(widget.type.items.value)));
+                        if (kIsWeb) {
+                          await FileService.saveFileWeb(bytes, widget.type
+                              .representation.toLowerCase());
+                        }
+                        else
+                        if (defaultTargetPlatform == TargetPlatform.windows) {
+                          var content = await FileService.loadFileWindows();
+                          switch (content.result) {
+                            case FileLoadResult.success:
+                              setState(() =>
+                              widget.type.items.value = content.items!);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content:
+                                Row(
+                                  children: [
+                                    Text(
+                                        'Successfully loaded the JSON file.',
+                                        style: TextStyle(color: Colors.white)
+                                    ),
+                                    Spacer(),
+                                    Icon(
+                                        Icons.check_circle_outline
+                                    ),
+                                  ],
+                                ),
+                                  backgroundColor: Colors.green,
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            case FileLoadResult.cancelled:
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content:
+                                Row(
+                                  children: [
+                                    Text(
+                                        'Loading Cancelled',
+                                        style: TextStyle(color: Colors.white)
+                                    ),
+                                    Spacer(),
+                                    Icon(
+                                        Icons.error_outline
+                                    ),
+                                  ],
+                                ),
+                                  backgroundColor: Colors.red,
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            case FileLoadResult.error:
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content:
+                                Row(
+                                  children: [
+                                    Text(
+                                        'Error: Failed to load the JSON file, it could be invalid.',
+                                        style: TextStyle(color: Colors.white)
+                                    ),
+                                    Spacer(),
+                                    Icon(
+                                        Icons.highlight_off
+                                    ),
+                                  ],
+                                ),
+                                  backgroundColor: Colors.red,
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                          }
+                        }
+                        if (FileService.pathChosen != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content:
+                            Row(
+                              children: [
+                                Text(
+                                    'Success: Saved ${widget.type.representation
+                                        .toLowerCase()}.json to ${FileService
+                                        .pathChosen}.',
+                                    style: TextStyle(color: Colors.white)
+                                ),
+                                Spacer(),
+                                Icon(
+                                    Icons.check_circle_outline
+                                ),
+                              ],
+                            ),
+                              backgroundColor: Colors.green,
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      },
+                      child: Text("Load"),
+                    ),
                 ],
               ),
             ],
           ),
         ),
-      ),
     );
   }
 }

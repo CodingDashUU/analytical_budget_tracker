@@ -68,6 +68,37 @@ class FileService {
     return FileLoad(FileLoadResult.cancelled, null);
   }
 
+  static Future<FileLoad> loadFileWeb() async {
+    pathChosen = null;
+    FilePickerResult? result = await FilePicker.pickFiles(
+        dialogTitle: "Select a valid JSON file to load",
+        allowMultiple: false,
+        allowedExtensions: ["json"],
+        type: FileType.custom,
+        withData: true
+    );
+    if (result != null && result.files.single.bytes != null) {
+      final content = utf8.decode(result.files.single.bytes!.toList());
+      try {
+        if (jsonDecode(content) is! List) {
+          return FileLoad(
+              FileLoadResult.success,
+              [BudgetItem.fromJson(jsonDecode(content), 0)]
+          );
+        }
+        return FileLoad(
+          FileLoadResult.success,
+          (jsonDecode(content) as List<dynamic>)
+              .mapIndexed((i, e) => BudgetItem.fromJson(e, i + 1))
+              .toList(),
+        );
+      } catch (e) {
+        return FileLoad(FileLoadResult.error, null);
+      }
+    }
+    return FileLoad(FileLoadResult.cancelled, null);
+  }
+
   static Future<void> saveFileWeb(Uint8List bytes, String fileName) async {
     pathChosen = null;
     String path = await FileSaver.instance.saveFile(

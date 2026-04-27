@@ -81,11 +81,7 @@ powershell.exe -ExecutionPolicy Bypass -File .\build_w.ps1
       - Windows
         - A file picker dialog will pop up, and will save your file to the file path specified
     - ##### The LOAD button
-      - ###### Platforms:
-        - Web
-          - Not implemented
-        - Windows
-          - A file picker dialog will pop up, and will load the JSON file into the tables
+      - A file picker dialog will pop up, and will load the JSON file into the tables
       - ###### Validation:
         - If the JSON has invalid semantics, it will simply give the following error:
           ![Snackbar Load Error](doc_images/snackbar_load_error.png)

@@ -106,9 +106,9 @@ flutter_launcher_icons:
   # Web Configuration
   web:
     generate: true
-    image_path: "assets/icon.png"
+    image_path: "assets/icon_712.png"
 
   # Windows Configuration
   windows:
     generate: true
-    image_path: "assets/icon.png"
+    image_path: "assets/icon_712.png"

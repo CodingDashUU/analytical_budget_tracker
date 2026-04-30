@@ -14,7 +14,6 @@
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:signals/signals.dart';
 
 import '../models/budget_item.dart';
 import 'budget_info.dart';
@@ -29,14 +28,17 @@ class AnalysisModel {
   BudgetItem get highestIncome => budgetInfo.incomeItems.value.isEmpty ? BudgetItem("None", 0.0) : budgetInfo.incomeItems.value.reduce((a, b) => a.amount > b.amount ? a : b);
   BudgetItem get highestExpense => budgetInfo.expenseItems.value.isEmpty ? BudgetItem("None", 0.0) : budgetInfo.expenseItems.value.reduce((a, b) => a.amount > b.amount ? a : b);
 
-  Computed<double> totalIncome = computed(() => budgetInfo.incomeItems.value
+  double get totalIncome =>
+      budgetInfo.incomeItems.value
       .map((e) => e.amount)
-      .fold(0.0, (a, b) => a + b));
-  Computed<double> totalExpenses = computed(() => budgetInfo.expenseItems.value
-      .map((e) => e.amount)
-      .fold(0.0, (a, b) => a + b));
+          .fold(0.0, (a, b) => a + b);
 
-  double get verdict => totalIncome.value - totalExpenses.value;
+  double get totalExpenses =>
+      budgetInfo.expenseItems.value
+      .map((e) => e.amount)
+          .fold(0.0, (a, b) => a + b);
+
+  double get verdict => totalIncome - totalExpenses;
   String get verdictText => switch(verdict) {
     < 0 => "LOSS",
     0 => "BREAK-EVEN",

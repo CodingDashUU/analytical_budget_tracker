@@ -22,8 +22,10 @@ import '../state/budget_info.dart';
 class DonutChart extends StatefulWidget {
   final List<MapEntry<String, double>> data;
   final List<Color>? colors;
+  final bool isLarge;
 
-  const DonutChart({super.key, required this.data, this.colors});
+  const DonutChart(
+      {super.key, required this.data, this.colors, required this.isLarge});
 
   @override
   State<DonutChart> createState() => _DonutChartState();
@@ -100,10 +102,9 @@ class _DonutChartState extends State<DonutChart>
   }
 
   Widget _buildLegend() {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return SizedBox(
+        height: 100,
+        child: ListView(
         children: List.generate(widget.data.length, (i) {
           final isHighlighted = i == touchedIndex;
           return GestureDetector(
@@ -147,15 +148,14 @@ class _DonutChartState extends State<DonutChart>
             ),
           );
         }),
-      ),
-    );
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 300,
-      child: Row(
+      child: Column(
         children: [
           Expanded(
             child: AnimatedBuilder(
@@ -186,16 +186,16 @@ class _DonutChartState extends State<DonutChart>
                   ),
                   sections: List.generate(widget.data.length, (i) {
                     final isTouched = i == touchedIndex;
-                    final double radius = isTouched ? 70.0 : 55.0;
+
 
                     return PieChartSectionData(
                       color: _colorAt(i),
                       value: widget.data[i].value * _anim.value,
                       cornerRadius: 8,
                       showTitle: false,
-                      radius: radius,
                       badgeWidget: isTouched ? _buildBadge(i) : null,
-                      badgePositionPercentageOffset: 1.1,
+                      badgePositionPercentageOffset: widget.isLarge ? 1.5 : 0.5,
+
                       borderSide: isTouched
                           ? const BorderSide(color: Colors.white, width: 2)
                           : const BorderSide(color: Colors.transparent),
@@ -214,6 +214,7 @@ class _DonutChartState extends State<DonutChart>
             ),
           ),
           const SizedBox(width: 8),
+          if (widget.isLarge)
           _buildLegend(),
         ],
       ),

@@ -45,7 +45,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           child: LayoutBuilder(
             builder: (context, constraints) {
               final isLarge = constraints.maxWidth > MAX_WIDTH;
-
+              final isLargeLegend = constraints.maxWidth > 600;
               return Wrap(
                 spacing: 16,
                 runSpacing: 16,
@@ -80,6 +80,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                             data: budgetInfo.incomeItems.value
                                 .map((e) => MapEntry(e.name, e.amount))
                                 .toList(),
+                            isLarge: isLargeLegend,
                           )
                         else
                           Text("No Income Source yet"),
@@ -105,6 +106,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                             data: budgetInfo.expenseItems.value
                                 .map((e) => MapEntry(e.name, e.amount))
                                 .toList(),
+                            isLarge: isLargeLegend,
                           )
                         else
                           Text("No Expense Item yet"),
@@ -141,6 +143,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                                   .fold(0, (a, b) => a + b),
                             ),
                           ],
+                          isLarge: isLargeLegend,
                         ),
                       ],
                     ),

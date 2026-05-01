@@ -17,6 +17,7 @@ import 'package:budget_tracker/widgets/advanced_spinbox.dart';
 import 'package:budget_tracker/widgets/advanced_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../models/budget_item.dart';
@@ -44,28 +45,24 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
   final incomeValue = signal(1.0);
   final expenseValue = signal(1.0);
 
-  void addIncomeItem () {
+  void addIncomeItem() {
     budgetInfo.incomeItems.value.add(
-      BudgetItem(
-        budgetInfo.incomeName.value,
-        incomeValue.value,
-      ),
+      BudgetItem(budgetInfo.incomeName.value, incomeValue.value),
     );
     budgetInfo.incomeName.value = "";
     incomeValue.value = 1.0;
     incomeNameController.clear();
   }
-  void addExpenseItem () {
-      budgetInfo.expenseItems.value.add(
-        BudgetItem(
-          budgetInfo.expenseName.value,
-          expenseValue.value,
-        ),
-      );
-      budgetInfo.expenseName.value = "";
-      expenseValue.value = 1.0;
-      expenseNameController.clear();
+
+  void addExpenseItem() {
+    budgetInfo.expenseItems.value.add(
+      BudgetItem(budgetInfo.expenseName.value, expenseValue.value),
+    );
+    budgetInfo.expenseName.value = "";
+    expenseValue.value = 1.0;
+    expenseNameController.clear();
   }
+
   @override
   void dispose() {
     nameController.dispose();
@@ -75,12 +72,129 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
     super.dispose();
   }
 
+  Widget _buildIncomeTextFieldsGrid() {
+    return MasonryGridView.count(
+      crossAxisCount: 1,
+      crossAxisSpacing: 20,
+      mainAxisSpacing: 20,
+      itemCount: 1,
+      shrinkWrap: true,
+      itemBuilder: (context, index) =>
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: AdvancedTextField(
+                    controller: incomeNameController,
+                    value: budgetInfo.incomeName,
+                    labelText: "Income Name",
+                    hintText: "Salary, Advertisements",
+                    prefixIcon: Icons.arrow_circle_up_outlined,
+                    regexPattern: r"^[a-zA-Z ]+",
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: AdvancedSpinbox(
+                    labelText: "Income Amount",
+                    currency: budgetInfo.currency.value,
+                    amountSignal: incomeValue,
+                  ),
+                ),
+              ),
+            ],
+          ),
+    );
+  }
+
+  List<Widget> _buildIncomeTextField() {
+    return [
+      AdvancedTextField(
+        controller: incomeNameController,
+        value: budgetInfo.incomeName,
+        labelText: "Income Name",
+        hintText: "Salary, Advertisements",
+        prefixIcon: Icons.arrow_circle_up_outlined,
+        regexPattern: r"^[a-zA-Z ]+",
+      ),
+      AdvancedSpinbox(
+        labelText: "Income Amount",
+        currency: budgetInfo.currency.value,
+        amountSignal: incomeValue,
+      ),
+    ];
+  }
+
+  Widget _buildExpenseTextFieldsGrid() {
+    return MasonryGridView.count(
+      crossAxisCount: 1,
+      crossAxisSpacing: 20,
+      mainAxisSpacing: 20,
+      itemCount: 1,
+      shrinkWrap: true,
+      itemBuilder: (context, index) =>
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: AdvancedTextField(
+                    controller: expenseNameController,
+                    value: budgetInfo.expenseName,
+                    labelText: "Expense Name",
+                    hintText: "Mortgage, Rent, Groceries",
+                    prefixIcon: Icons.arrow_circle_down_outlined,
+                    regexPattern: r"^[a-zA-Z ]+",
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: AdvancedSpinbox(
+                    labelText: "Expense Amount",
+                    currency: budgetInfo.currency.value,
+                    amountSignal: expenseValue,
+                  ),
+                ),
+              ),
+            ],
+          ),
+    );
+  }
+
+  List<Widget> _buildExpenseTextField() {
+    return [
+      AdvancedTextField(
+        controller: expenseNameController,
+        value: budgetInfo.expenseName,
+        labelText: "Expense Name",
+        hintText: "Mortgage, Rent, Groceries",
+        prefixIcon: Icons.arrow_circle_down_outlined,
+        regexPattern: r"^[a-zA-Z ]+",
+      ),
+      AdvancedSpinbox(
+        labelText: "Expense Amount",
+        currency: budgetInfo.currency.value,
+        amountSignal: expenseValue,
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Budget Input")),
       drawer: AppDrawer(),
-      body: Padding(
+        body: LayoutBuilder(
+            builder: (context, constraints) {
+              final isLarge = constraints.maxWidth > 600;
+              return Padding(
         padding: EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Watch(
@@ -128,71 +242,85 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
                   ],
                 ),
                 Divider(),
-                AdvancedTextField(
-                  controller: incomeNameController,
-                  value: budgetInfo.incomeName,
-                  labelText: "Income Name",
-                  hintText: "Salary, Advertisements",
-                  prefixIcon: Icons.arrow_circle_up_outlined,
-                  regexPattern: r"^[a-zA-Z ]+",
-                ),
-                AdvancedSpinbox(
-                  labelText: "Income Amount",
-                  currency: budgetInfo.currency.value,
-                  amountSignal: incomeValue,
-                ),
+                if (isLarge)
+                  _buildIncomeTextFieldsGrid()
+                else
+                  ..._buildIncomeTextField(),
                 SizedBox(height: 10),
                 OutlinedButton(
-                  onPressed: budgetInfo.incomeName.value.isNotEmpty ? () {
-                    if (budgetInfo.incomeItems.value.map((i) => i.name).contains(budgetInfo.incomeName.value)) {
+                  onPressed: budgetInfo.incomeName.value.isNotEmpty
+                      ? () {
+                    if (budgetInfo.incomeItems.value
+                        .map((i) => i.name)
+                        .contains(budgetInfo.incomeName.value)) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error: ${budgetInfo.incomeName.value} already exists as an income source', style: TextStyle(color: Colors.white)),
-                          backgroundColor: Colors.red, duration: Duration(seconds: 1),
+                        SnackBar(
+                          content: Text(
+                            'Error: ${budgetInfo.incomeName
+                                .value} already exists as an income source',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          backgroundColor: Colors.red,
+                          duration: Duration(seconds: 1),
                         ),
                       );
                       return;
                     }
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Success: ${budgetInfo.incomeName.value} successfully added', style: TextStyle(color: Colors.white)),
-                          backgroundColor: Colors.green, duration: Duration(seconds: 1),
-                        ));
+                      SnackBar(
+                        content: Text(
+                          'Success: ${budgetInfo.incomeName
+                              .value} successfully added',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.green,
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
                     addIncomeItem();
-
-                  } : null,
+                  }
+                      : null,
                   child: Text("Add Income Item", textAlign: .center),
                 ),
-                SizedBox(height: 40),
-                AdvancedTextField(
-                  controller: expenseNameController,
-                  value: budgetInfo.expenseName,
-                  labelText: "Expense Name",
-                  hintText: "Mortgage, Rent, Groceries",
-                  prefixIcon: Icons.arrow_circle_down_outlined,
-                  regexPattern: r"^[a-zA-Z ]+",
-                ),
-                AdvancedSpinbox(
-                  labelText: "Expense Amount",
-                  currency: budgetInfo.currency.value,
-                  amountSignal: expenseValue,
-                ),
+                SizedBox(height: 20),
+                if (isLarge)
+                  _buildExpenseTextFieldsGrid()
+                else
+                  ..._buildExpenseTextField(),
                 SizedBox(height: 10),
                 OutlinedButton(
-                  onPressed: budgetInfo.expenseName.value.isNotEmpty ? () {
-                    if (budgetInfo.expenseItems.value.map((i) => i.name).contains(budgetInfo.expenseName.value)) {
+                  onPressed: budgetInfo.expenseName.value.isNotEmpty
+                      ? () {
+                    if (budgetInfo.expenseItems.value
+                        .map((i) => i.name)
+                        .contains(budgetInfo.expenseName.value)) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error: ${budgetInfo.expenseName.value} already exists as an expense', style: TextStyle(color: Colors.white)),
-                          backgroundColor: Colors.red, duration: Duration(seconds: 1),
+                        SnackBar(
+                          content: Text(
+                            'Error: ${budgetInfo.expenseName
+                                .value} already exists as an expense',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          backgroundColor: Colors.red,
+                          duration: Duration(seconds: 1),
                         ),
                       );
                       return;
                     }
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Success: ${budgetInfo.expenseName.value} successfully added', style: TextStyle(color: Colors.white)),
-                          backgroundColor: Colors.green, duration: Duration(seconds: 1),
-                        ));
+                      SnackBar(
+                        content: Text(
+                          'Success: ${budgetInfo.expenseName
+                              .value} successfully added',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.green,
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
                     addExpenseItem();
-
-                  } : null,
+                  }
+                      : null,
                   child: Text("Add Expense Item", textAlign: .center),
                 ),
                 SizedBox(height: 50),
@@ -200,7 +328,8 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
             ),
           ),
         ),
-      ),
-    );
+              );
+            }
+        ));
   }
 }

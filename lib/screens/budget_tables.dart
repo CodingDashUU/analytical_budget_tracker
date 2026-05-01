@@ -13,6 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -42,7 +43,8 @@ class _BudgetTablesPageState extends State<BudgetTablesPage> {
         return Scaffold(
           appBar: AppBar(
               title: const Text("Budget Tables"),
-              actions: [
+              actions: defaultTargetPlatform != TargetPlatform.android &&
+                  defaultTargetPlatform != TargetPlatform.iOS ? [
                 BudgetDropdownButton(pageSetState: setState,
                   type: BudgetType.income,
                   icon: Icons.arrow_circle_up,),
@@ -50,7 +52,7 @@ class _BudgetTablesPageState extends State<BudgetTablesPage> {
                 BudgetDropdownButton(pageSetState: setState,
                   type: BudgetType.expense,
                   icon: Icons.arrow_circle_down,),
-                SizedBox(width: 22)]
+                SizedBox(width: 22)] : null
           ),
           drawer: AppDrawer(),
           floatingActionButton: isLarge ? FloatingActionButton(

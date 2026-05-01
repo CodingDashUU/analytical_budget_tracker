@@ -14,10 +14,12 @@
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:signals/signals_flutter.dart';
 
 import '../models/budget_type.dart';
 import '../models/months.dart';
 import '../state/budget_info.dart';
+import '../widgets/budget_dropdown_btn.dart';
 import '../widgets/budget_list.dart';
 import '../widgets/budget_table.dart';
 import '../widgets/drawer.dart';
@@ -33,11 +35,23 @@ class _BudgetTablesPageState extends State<BudgetTablesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
+    return Watch((context) =>
+        LayoutBuilder(
       builder: (context, constraints) {
         final isLarge = constraints.maxWidth > 600;
         return Scaffold(
-          appBar: AppBar(title: const Text("Budget Tables")),
+          appBar: AppBar(
+              title: const Text("Budget Tables"),
+              actions: [
+                BudgetDropdownButton(pageSetState: setState,
+                  type: BudgetType.income,
+                  icon: Icons.arrow_circle_up,),
+                SizedBox(width: 11),
+                BudgetDropdownButton(pageSetState: setState,
+                  type: BudgetType.expense,
+                  icon: Icons.arrow_circle_down,),
+                SizedBox(width: 22)]
+          ),
           drawer: AppDrawer(),
           floatingActionButton: isLarge ? FloatingActionButton(
             onPressed: () => setState(() {
@@ -50,7 +64,7 @@ class _BudgetTablesPageState extends State<BudgetTablesPage> {
                 : MobileLayout(),
           );
       },
-    );
+        ));
   }
 }
 

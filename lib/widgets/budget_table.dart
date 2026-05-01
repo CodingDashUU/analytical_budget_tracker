@@ -13,16 +13,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-import 'dart:convert';
-
 import 'package:data_table_2/data_table_2.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../models/budget_item.dart';
 import '../models/budget_type.dart';
-import '../services/file_service.dart';
 import '../state/budget_info.dart';
 
 enum _SortOrder { none, asc, desc }
@@ -274,145 +270,11 @@ class _BudgetTableState extends State<BudgetTable> {
                 ),
               ),
             ),
-            Row(
-              children: [
-                TextButton(
-                  onPressed: () => setState(() {
-                    isVisible = !isVisible;
-                  }),
-                  child: Text("Edit"),
-                ),
-                if (defaultTargetPlatform != TargetPlatform.android &&
-                    defaultTargetPlatform != TargetPlatform.iOS)
-                  TextButton(
-                    onPressed: () async {
-                      Uint8List bytes = Uint8List.fromList(
-                        utf8.encode(jsonEncode(widget.type.items.value)),
-                      );
-                      if (kIsWeb) {
-                        await FileService.saveFileWeb(
-                          bytes,
-                          widget.type.representation.toLowerCase(),
-                        );
-                      } else if (defaultTargetPlatform ==
-                          TargetPlatform.windows) {
-                        await FileService.saveFileWindows(
-                          bytes,
-                          widget.type.representation.toLowerCase(),
-                        );
-                      }
-                      if (FileService.pathChosen != null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Row(
-                              children: [
-                                Text(
-                                  'Success: Saved ${widget.type.representation.toLowerCase()}.json to ${FileService.pathChosen}.',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                Spacer(),
-                                Icon(Icons.check_circle_outline),
-                              ],
-                            ),
-                            backgroundColor: Colors.green,
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                      }
-                    },
-                    child: Text("Save"),
-                  ),
-                if (defaultTargetPlatform != TargetPlatform.android &&
-                    defaultTargetPlatform != TargetPlatform.iOS)
-                  TextButton(
-                    onPressed: () async {
-                      FileLoad? content;
-                      if (kIsWeb) {
-                        content = await FileService.loadFileWeb();
-                      } else if (defaultTargetPlatform ==
-                          TargetPlatform.windows) {
-                        content = await FileService.loadFileWindows();
-                      }
-                      if (content != null) {
-                        switch (content.result) {
-                          case FileLoadResult.success:
-                            setState(
-                              () => widget.type.items.value = content!.items!,
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Row(
-                                  children: [
-                                    Text(
-                                      'Successfully loaded the JSON file.',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    Spacer(),
-                                    Icon(Icons.check_circle_outline),
-                                  ],
-                                ),
-                                backgroundColor: Colors.green,
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
-                          case FileLoadResult.cancelled:
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Row(
-                                  children: [
-                                    Text(
-                                      'Loading Cancelled',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    Spacer(),
-                                    Icon(Icons.error_outline),
-                                  ],
-                                ),
-                                backgroundColor: Colors.red,
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
-                          case FileLoadResult.error:
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Row(
-                                  children: [
-                                    Text(
-                                      'Error: Failed to load the JSON file, it could be invalid.',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    Spacer(),
-                                    Icon(Icons.highlight_off),
-                                  ],
-                                ),
-                                backgroundColor: Colors.red,
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
-                        }
-                        if (FileService.pathChosen != null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Row(
-                                children: [
-                                Text(
-                                    'Success: Saved ${widget.type.representation.toLowerCase()}.json to ${FileService.pathChosen}.',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                Spacer(),
-                                  Icon(Icons.check_circle_outline),
-                                ],
-                            ),
-                              backgroundColor: Colors.green,
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                        }
-                      }
-                    },
-                    child: Text("Load"),
-                  ),
-              ],
+            TextButton(
+              onPressed: () => setState(() {
+                isVisible = !isVisible;
+              }),
+              child: Text("Edit"),
             ),
           ],
         ),

@@ -42,24 +42,22 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
   final expenseNameController = TextEditingController(
     text: budgetInfo.expenseName.value,
   );
-  final incomeValue = signal(1.0);
-  final expenseValue = signal(1.0);
 
   void addIncomeItem() {
     budgetInfo.incomeItems.value.add(
-      BudgetItem(budgetInfo.incomeName.value, incomeValue.value),
+      BudgetItem(budgetInfo.incomeName.value, budgetInfo.incomeValue.value),
     );
     budgetInfo.incomeName.value = "";
-    incomeValue.value = 1.0;
+    budgetInfo.incomeValue.value = 1.0;
     incomeNameController.clear();
   }
 
   void addExpenseItem() {
     budgetInfo.expenseItems.value.add(
-      BudgetItem(budgetInfo.expenseName.value, expenseValue.value),
+      BudgetItem(budgetInfo.expenseName.value, budgetInfo.expenseValue.value),
     );
     budgetInfo.expenseName.value = "";
-    expenseValue.value = 1.0;
+    budgetInfo.expenseValue.value = 1.0;
     expenseNameController.clear();
   }
 
@@ -102,7 +100,7 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
                   child: AdvancedSpinbox(
                     labelText: "Income Amount",
                     currency: budgetInfo.currency.value,
-                    amountSignal: incomeValue,
+                    amountSignal: budgetInfo.incomeValue,
                   ),
                 ),
               ),
@@ -124,7 +122,7 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
       AdvancedSpinbox(
         labelText: "Income Amount",
         currency: budgetInfo.currency.value,
-        amountSignal: incomeValue,
+        amountSignal: budgetInfo.incomeValue,
       ),
     ];
   }
@@ -159,7 +157,7 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
                   child: AdvancedSpinbox(
                     labelText: "Expense Amount",
                     currency: budgetInfo.currency.value,
-                    amountSignal: expenseValue,
+                    amountSignal: budgetInfo.expenseValue,
                   ),
                 ),
               ),
@@ -181,7 +179,7 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
       AdvancedSpinbox(
         labelText: "Expense Amount",
         currency: budgetInfo.currency.value,
-        amountSignal: expenseValue,
+        amountSignal: budgetInfo.expenseValue,
       ),
     ];
   }

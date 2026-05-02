@@ -55,10 +55,16 @@ class BudgetInfo {
 
   BudgetInfo.fromMap(Map<dynamic, dynamic> map, Box box)
       :
-        name = signal((map["name"] ?? "").toString()),
-        currency = signal((map["currency"] ?? "").toString()),
-        incomeName = signal((map["incomeName"] ?? "").toString()),
-        expenseName = signal((map["expenseName"] ?? "").toString()),
+        name = signal((map["name"] ?? "").toString().replaceAllMapped(
+            RegExp(r"^[^a-zA-Z'&-:, ]+"), (m) => "")),
+        currency = signal((map["currency"] ?? "").toString().replaceAllMapped(
+            RegExp(r"[^a-zA-Z$€£¥¢₣₦₩₭₱₽]"), (m) => "")),
+        incomeName = signal(
+            (map["incomeName"] ?? "").toString().replaceAllMapped(
+                RegExp(r"^[^a-zA-Z ]+"), (m) => "")),
+        expenseName = signal(
+            (map["expenseName"] ?? "").toString().replaceAllMapped(
+                RegExp(r"^[^a-zA-Z ]+"), (m) => "")),
         incomeValue = signal(
             (double.tryParse(map["incomeValue"].toString()) ?? 0.0).clamp(
                 1.0, 1000000000)),

@@ -13,16 +13,25 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+import 'dart:io';
+
 import 'package:budget_tracker/state/budget_info.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'app.dart';
 
 void main() async {
-  await Hive.initFlutter();
-  var box = await Hive.openBox('budgetInfo');
   WidgetsFlutterBinding.ensureInitialized();
+  if (!kIsWeb) {
+    Directory dir = await getApplicationSupportDirectory();
+    Hive.init(dir.path);
+  } else {
+    Hive.initFlutter();
+  }
+  var box = await Hive.openBox('budgetInfo');
   budgetInfo = BudgetInfo.fromMap(box.toMap(), box);
   runApp(const BudgetTrackerApp());
 }

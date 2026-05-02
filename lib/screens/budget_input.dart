@@ -97,12 +97,13 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10),
-                  child: AdvancedSpinbox(
+                    child: Watch((context) =>
+                        AdvancedSpinbox(
                     labelText: "Income Amount",
                     currency: budgetInfo.currency.value,
                     amountSignal: budgetInfo.incomeValue,
                   ),
-                ),
+                    )),
               ),
             ],
           ),
@@ -119,11 +120,12 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
         prefixIcon: Icons.arrow_circle_up_outlined,
         regexPattern: r"^[a-zA-Z ]+",
       ),
-      AdvancedSpinbox(
+      Watch((context) =>
+          AdvancedSpinbox(
         labelText: "Income Amount",
         currency: budgetInfo.currency.value,
         amountSignal: budgetInfo.incomeValue,
-      ),
+          )),
     ];
   }
 
@@ -154,11 +156,12 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10),
-                  child: AdvancedSpinbox(
+                  child: Watch((context) =>
+                      AdvancedSpinbox(
                     labelText: "Expense Amount",
                     currency: budgetInfo.currency.value,
                     amountSignal: budgetInfo.expenseValue,
-                  ),
+                      )),
                 ),
               ),
             ],
@@ -176,11 +179,12 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
         prefixIcon: Icons.arrow_circle_down_outlined,
         regexPattern: r"^[a-zA-Z ]+",
       ),
-      AdvancedSpinbox(
+      Watch((context) =>
+          AdvancedSpinbox(
         labelText: "Expense Amount",
         currency: budgetInfo.currency.value,
         amountSignal: budgetInfo.expenseValue,
-      ),
+          )),
     ];
   }
 
@@ -195,8 +199,7 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
               return Padding(
         padding: EdgeInsets.all(20),
         child: SingleChildScrollView(
-          child: Watch(
-            (context) => Column(
+          child: Column(
               mainAxisAlignment: .center,
               children: [
                 AdvancedTextField(
@@ -219,7 +222,7 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
                   helperText: "symbol or full initials",
                   prefixIcon: Icons.attach_money,
                   maxLength: 3,
-                  regexPattern: r"^[^ \d]+",
+                  regexPattern: r"[a-zA-Z$€£¥¢₣₦₩₭₱₽]",
                 ),
                 SizedBox(height: 20),
                 Column(
@@ -325,7 +328,6 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
               ],
             ),
           ),
-        ),
               );
             }
         ));

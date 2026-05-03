@@ -18,6 +18,7 @@ import 'dart:convert';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:signals/signals_flutter.dart';
 
 import '../models/budget_type.dart';
 import '../services/file_service.dart';
@@ -39,12 +40,8 @@ class BudgetDropdownButton extends StatefulWidget {
 }
 
 class _BudgetDropdownButtonState extends State<BudgetDropdownButton> {
-  bool fileDialogOpen = false;
 
   void onSave() async {
-    setState(() {
-      fileDialogOpen = true;
-    });
     Uint8List bytes = Uint8List.fromList(
       utf8.encode(jsonEncode(widget.type.items.value)),
     );
@@ -78,15 +75,9 @@ class _BudgetDropdownButtonState extends State<BudgetDropdownButton> {
         ),
       );
     }
-    setState(() {
-      fileDialogOpen = false;
-    });
   }
 
   void onLoad() async {
-    setState(() {
-      fileDialogOpen = true;
-    });
     FileLoad? content;
     if (kIsWeb) {
       content = await FileService.loadFileWeb();
@@ -149,9 +140,6 @@ class _BudgetDropdownButtonState extends State<BudgetDropdownButton> {
           );
       }
     }
-    setState(() {
-      fileDialogOpen = false;
-    });
   }
 
   @override
@@ -179,16 +167,18 @@ class _BudgetDropdownButtonState extends State<BudgetDropdownButton> {
         [
           if (defaultTargetPlatform != TargetPlatform.android &&
               defaultTargetPlatform != TargetPlatform.iOS)
-            TextButton(
-              onPressed: fileDialogOpen ? null : onSave,
+            Watch((context) =>
+                TextButton(
+                  onPressed: FileService.fileDialogOpen.value ? null : onSave,
               child: Text("Save ${widget.type.representation}"),
-            ),
+                )),
           if (defaultTargetPlatform != TargetPlatform.android &&
               defaultTargetPlatform != TargetPlatform.iOS)
-            TextButton(
-              onPressed: fileDialogOpen ? null : onLoad,
+            Watch((context) =>
+                TextButton(
+                  onPressed: FileService.fileDialogOpen.value ? null : onLoad,
               child: Text("Load ${widget.type.representation}"),
-            ),
+                )),
         ].map((Widget item) => DropdownItem<Widget>(value: item, child: item)).toList(),
       ),
     );

@@ -26,16 +26,14 @@ enum BudgetType {
   final String representation;
   final Color representationColor;
 
-  // Constructor remains const, but we removed the 'items' field
   const BudgetType(this.representation, this.representationColor);
 
-  // Use a getter to fetch the dynamic data
   Signal<List<BudgetItem>> get items {
     switch (this) {
       case BudgetType.income:
         return budgetInfo.incomeItems;
       case BudgetType.expense:
-        return budgetInfo.expenseItems; // Assuming expenseItems exists
+        return budgetInfo.expenseItems;
     }
   }
 }

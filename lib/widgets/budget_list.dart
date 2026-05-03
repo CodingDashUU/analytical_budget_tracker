@@ -133,7 +133,7 @@ class _BudgetCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      budgetType.representation, // Or item.category
+                      budgetType.representation,
                       style: TextStyle(
                         color: Colors.grey.shade600,
                         fontSize: 12,
@@ -241,7 +241,7 @@ class BudgetTotalTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    budgetType.representation, // Or item.category
+                    budgetType.representation,
                     style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                   ),
                 ],
@@ -307,7 +307,7 @@ class _ExpenseTotalTileState extends State<ExpenseTotalTile> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    "Expense", // Or item.category
+                    "Expense",
                     style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                   ),
                 ],

@@ -56,7 +56,6 @@ class FileService {
     );
     fileDialogOpen.value = false;
     if (result != null && result.files.single.path != null) {
-      // Read the file from the path
       final file = File(result.files.single.path!);
       final String content = await file.readAsString();
       try {

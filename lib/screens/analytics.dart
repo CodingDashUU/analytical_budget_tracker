@@ -50,7 +50,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 runSpacing: 16,
                 children: [
                   SizedBox(
-                    width: constraints.maxWidth, // 1 per row on mobile
+                    width: constraints.maxWidth,
                     child: Text(
                       "Budget Analysis for ${budgetInfo.name.value.isNotEmpty ? budgetInfo.name.value : 'You'} of ${months[budgetInfo.budgetDate.value.month]} ${budgetInfo.budgetDate.value.year}",
                       textAlign: .center,
@@ -63,8 +63,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                   SizedBox(
                     width: isLarge
                         ? (constraints.maxWidth / 3) -
-                              16 // 3 per row on large
-                        : constraints.maxWidth, // 1 per row on mobile
+                        16
+                        : constraints.maxWidth,
                     child: Column(
                       children: [
                         Text(
@@ -89,8 +89,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                   SizedBox(
                     width: isLarge
                         ? (constraints.maxWidth / 3) -
-                              16 // 3 per row on large
-                        : constraints.maxWidth, // 1 per row on mobile
+                        16
+                        : constraints.maxWidth,
                     child: Column(
                       children: [
                         Text(
@@ -115,8 +115,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                   SizedBox(
                     width: isLarge
                         ? (constraints.maxWidth / 3) -
-                              16 // 3 per row on large
-                        : constraints.maxWidth, // 1 per row on mobile
+                        16
+                        : constraints.maxWidth,
                     child: Column(
                       children: [
                         Text(
@@ -150,14 +150,14 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                   SizedBox(
                     width: isLarge
                         ? (constraints.maxWidth / 3) -
-                              16 // 3 per row on large
-                        : constraints.maxWidth, // 1 per row on mobile
+                        16
+                        : constraints.maxWidth,
                     child: Column(
                       children: [
                         SizedBox(
                           width: isLarge
                               ? (constraints.maxWidth / 3) -
-                                    16 // 3 per row on large
+                              16
                               : constraints.maxWidth,
                           child: Text(
                             "Income",
@@ -168,7 +168,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                         SizedBox(
                           width: isLarge
                               ? (constraints.maxWidth / 3) -
-                                    16 // 3 per row on large
+                              16
                               : constraints.maxWidth,
                           child: StatCard(
                             title: "Average Income Earnings",
@@ -180,7 +180,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                         SizedBox(
                           width: isLarge
                               ? (constraints.maxWidth / 3) -
-                                    16 // 3 per row on large
+                              16
                               : constraints.maxWidth,
                           child: StatCard(
                             title: "Lowest Income Source Earnings",
@@ -195,7 +195,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                         SizedBox(
                           width: isLarge
                               ? (constraints.maxWidth / 3) -
-                                    16 // 3 per row on large
+                              16
                               : constraints.maxWidth,
                           child: StatCard(
                             title: "Highest Income Source Earnings",
@@ -213,15 +213,15 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                   SizedBox(
                     width: isLarge
                         ? (constraints.maxWidth / 3) -
-                              16 // 3 per row on large
-                        : constraints.maxWidth, // 1 per row on mobile
+                        16
+                        : constraints.maxWidth,
                     child: Column(
                       children: [
                         SizedBox(
                           width: isLarge
                               ? (constraints.maxWidth / 3) -
-                                    16 // 3 per row on large
-                              : constraints.maxWidth, // 1 per row on mobile
+                              16
+                              : constraints.maxWidth,
                           child: Text(
                             "Expenses",
                             textAlign: .center,
@@ -231,8 +231,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                         SizedBox(
                           width: isLarge
                               ? (constraints.maxWidth / 3) -
-                                    16 // 3 per row on large
-                              : constraints.maxWidth, // 1 per row on mobile
+                              16
+                              : constraints.maxWidth,
                           child: StatCard(
                             title: "Average Expense Cost",
                             value:
@@ -243,8 +243,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                         SizedBox(
                           width: isLarge
                               ? (constraints.maxWidth / 3) -
-                                    16 // 3 per row on large
-                              : constraints.maxWidth, // 1 per row on mobile
+                              16
+                              : constraints.maxWidth,
                           child: StatCard(
                             title: "Lowest Expense Cost",
                             value:
@@ -258,8 +258,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                         SizedBox(
                           width: isLarge
                               ? (constraints.maxWidth / 3) -
-                                    16 // 3 per row on large
-                              : constraints.maxWidth, // 1 per row on mobile
+                              16
+                              : constraints.maxWidth,
                           child: StatCard(
                             title: "Highest Expense Cost",
                             value:

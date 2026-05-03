@@ -39,6 +39,121 @@ class BudgetDropdownButton extends StatefulWidget {
 }
 
 class _BudgetDropdownButtonState extends State<BudgetDropdownButton> {
+  bool fileDialogOpen = false;
+
+  void onSave() async {
+    setState(() {
+      fileDialogOpen = true;
+    });
+    Uint8List bytes = Uint8List.fromList(
+      utf8.encode(jsonEncode(widget.type.items.value)),
+    );
+    if (kIsWeb) {
+      await FileService.saveFileWeb(
+        bytes,
+        widget.type.representation.toLowerCase(),
+      );
+    } else if (defaultTargetPlatform == TargetPlatform.windows) {
+      await FileService.saveFileWindows(
+        bytes,
+        widget.type.representation.toLowerCase(),
+      );
+    }
+    if (FileService.pathChosen != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Text(
+                'Success: Saved ${widget.type.representation
+                    .toLowerCase()}.json to ${FileService.pathChosen}.',
+                style: TextStyle(color: Colors.white),
+              ),
+              Spacer(),
+              Icon(Icons.check_circle_outline),
+            ],
+          ),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+    setState(() {
+      fileDialogOpen = false;
+    });
+  }
+
+  void onLoad() async {
+    setState(() {
+      fileDialogOpen = true;
+    });
+    FileLoad? content;
+    if (kIsWeb) {
+      content = await FileService.loadFileWeb();
+    } else if (defaultTargetPlatform == TargetPlatform.windows) {
+      content = await FileService.loadFileWindows();
+    }
+    if (content != null) {
+      switch (content.result) {
+        case FileLoadResult.success:
+          widget.pageSetState(() => widget.type.items.value = content!.items!);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Text(
+                    'Successfully loaded the JSON file.',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Spacer(),
+                  Icon(Icons.check_circle_outline),
+                ],
+              ),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        case FileLoadResult.cancelled:
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Text(
+                    'Loading Cancelled',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Spacer(),
+                  Icon(Icons.error_outline),
+                ],
+              ),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        case FileLoadResult.error:
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Text(
+                    'Error: Failed to load the JSON file, it could be invalid.',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Spacer(),
+                  Icon(Icons.highlight_off),
+                ],
+              ),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 2),
+            ),
+          );
+      }
+    }
+    setState(() {
+      fileDialogOpen = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Tooltip(
@@ -60,115 +175,18 @@ class _BudgetDropdownButtonState extends State<BudgetDropdownButton> {
           height: 40,
           width: 130,
         ),
-        items: [
+        items:
+        [
           if (defaultTargetPlatform != TargetPlatform.android &&
               defaultTargetPlatform != TargetPlatform.iOS)
             TextButton(
-              onPressed: () async {
-                Uint8List bytes = Uint8List.fromList(
-                  utf8.encode(jsonEncode(widget.type.items.value)),
-                );
-                if (kIsWeb) {
-                  await FileService.saveFileWeb(
-                    bytes,
-                    widget.type.representation.toLowerCase(),
-                  );
-                } else if (defaultTargetPlatform == TargetPlatform.windows) {
-                  await FileService.saveFileWindows(
-                    bytes,
-                    widget.type.representation.toLowerCase(),
-                  );
-                }
-                if (FileService.pathChosen != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Row(
-                        children: [
-                          Text(
-                            'Success: Saved ${widget.type.representation.toLowerCase()}.json to ${FileService.pathChosen}.',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          Spacer(),
-                          Icon(Icons.check_circle_outline),
-                        ],
-                      ),
-                      backgroundColor: Colors.green,
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                }
-              },
+              onPressed: fileDialogOpen ? null : onSave,
               child: Text("Save ${widget.type.representation}"),
             ),
           if (defaultTargetPlatform != TargetPlatform.android &&
               defaultTargetPlatform != TargetPlatform.iOS)
             TextButton(
-              onPressed: () async {
-                FileLoad? content;
-                if (kIsWeb) {
-                  content = await FileService.loadFileWeb();
-                } else if (defaultTargetPlatform == TargetPlatform.windows) {
-                  content = await FileService.loadFileWindows();
-                }
-                if (content != null) {
-                  switch (content.result) {
-                    case FileLoadResult.success:
-                      widget.pageSetState(
-                        () => widget.type.items.value = content!.items!,
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Row(
-                            children: [
-                              Text(
-                                'Successfully loaded the JSON file.',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              Spacer(),
-                              Icon(Icons.check_circle_outline),
-                            ],
-                          ),
-                          backgroundColor: Colors.green,
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
-                    case FileLoadResult.cancelled:
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Row(
-                            children: [
-                              Text(
-                                'Loading Cancelled',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              Spacer(),
-                              Icon(Icons.error_outline),
-                            ],
-                          ),
-                          backgroundColor: Colors.red,
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
-                    case FileLoadResult.error:
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Row(
-                            children: [
-                              Text(
-                                'Error: Failed to load the JSON file, it could be invalid.',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              Spacer(),
-                              Icon(Icons.highlight_off),
-                            ],
-                          ),
-                          backgroundColor: Colors.red,
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
-                  }
-                }
-              },
+              onPressed: fileDialogOpen ? null : onLoad,
               child: Text("Load ${widget.type.representation}"),
             ),
         ].map((Widget item) => DropdownItem<Widget>(value: item, child: item)).toList(),

@@ -23,13 +23,13 @@ class BudgetTrackerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerConfig: MainRouter,
+      routerConfig: router,
       title: 'Budget Tracker',
       theme: ThemeData(
-      brightness: Brightness.light,
-      primarySwatch: Colors.blue,
-    ),
-
+        brightness: Brightness.light,
+        primarySwatch: Colors.blue,
+      ),
+      debugShowCheckedModeBanner: false,
       darkTheme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
         colorScheme: ColorScheme.fromSeed(

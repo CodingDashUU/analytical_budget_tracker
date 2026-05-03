@@ -20,7 +20,7 @@ import '../screens/analytics.dart';
 import '../screens/budget_input.dart';
 import '../screens/budget_tables.dart';
 
-final GoRouter MainRouter = GoRouter(
+final GoRouter router = GoRouter(
   routes: <RouteBase>[
     GoRoute(
       path: '/',

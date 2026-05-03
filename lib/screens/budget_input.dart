@@ -248,7 +248,9 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
                 else
                   ..._buildIncomeTextField(),
                 SizedBox(height: 10),
-                OutlinedButton(
+                Watch(
+                        (context) =>
+                        OutlinedButton(
                   onPressed: budgetInfo.incomeName.value.isNotEmpty
                       ? () {
                     if (budgetInfo.incomeItems.value
@@ -282,14 +284,16 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
                   }
                       : null,
                   child: Text("Add Income Item", textAlign: .center),
-                ),
+                        )),
                 SizedBox(height: 20),
                 if (isLarge)
                   _buildExpenseTextFieldsGrid()
                 else
                   ..._buildExpenseTextField(),
                 SizedBox(height: 10),
-                OutlinedButton(
+                Watch(
+                      (context) =>
+                      OutlinedButton(
                   onPressed: budgetInfo.expenseName.value.isNotEmpty
                       ? () {
                     if (budgetInfo.expenseItems.value
@@ -323,7 +327,7 @@ class _BudgetInputPageState extends State<BudgetInputPage> {
                   }
                       : null,
                   child: Text("Add Expense Item", textAlign: .center),
-                ),
+                      ),),
                 SizedBox(height: 50),
               ],
             ),

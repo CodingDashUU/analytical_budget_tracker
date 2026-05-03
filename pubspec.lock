@@ -74,7 +74,7 @@ packages:
     source: hosted
     version: "1.0.0"
   collection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: collection
       sha256: "2f5709ae4d3d59dd8f7cd309b4e023046b57d8a6c82130785d2b0e5868084e76"
@@ -577,7 +577,7 @@ packages:
     source: hosted
     version: "6.2.1"
   signals_flutter:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: signals_flutter
       sha256: "7c83418f47e3538685217e583f0fbd17a29716fa1a9ce2247e2455786e8ea81a"

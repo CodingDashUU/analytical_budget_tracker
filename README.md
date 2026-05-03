@@ -41,12 +41,13 @@ powershell.exe -ExecutionPolicy Bypass -File .\build_w.ps1
 - Currency
   - Due to the extensive amount of currencies in the world, I made it so you can type yours manually
   - Examples: $, ¥, £, USD, JPY, GBP
-  - Can only contain non-digit characters
-  - Can only be up to 3 characters
+  - Can only contain lower- and uppercase, and the following characters: $€£¥¢₣₦₩₭₱₽
+  - Can only contain up to 3 characters
 - Budget Date
   - The month and year of which you are recording your budget (usually at the end of the month when all your income and expenses are being recorded)
 - As soon as you change these, they are immediately applied
-### Income and Expense:
+
+#### Income and Expense:
 - Income and Expense Name:
   - Can only contain lower- and uppercase characters
   - Can only be up to 20 characters
@@ -63,62 +64,70 @@ powershell.exe -ExecutionPolicy Bypass -File .\build_w.ps1
 
 ### Budget Tables
 - At the top, it displays your name, and the date of the budget, from fields you entered in the last screen
-  ![Budget Label](doc_images/budget_label.png)
-  - There are 2 ways your budget can be viewed
-    - #### Tabular View
-    ![Budget Tables](doc_images/budget_tables.png)
+  ![Budget Label](doc_images/budget_tables.png)
+- There are 2 ways your budget can be viewed
+  - #### Tabular View
+  ![Budget Tables](doc_images/budget_label.png)
     - This view is only available for bigger screens
     - If your screen width is smaller than 600px, this won't be available for you
-    - ##### The EDIT button
-      - This is how you would delete your items
-        ![Budget Table Delete](doc_images/budget_table_del.png)
-      - Pressing the normal X button next to each item would delete that item
-      - Pressing the X All button next to Total would delete the entire table
-      - There is no confirmation for any of this
-    - ##### The SAVE button
-      - Web
-        - Will save your items to your Downloads folder as JSON
-      - Windows
-        - A file picker dialog will pop up, and will save your file to the file path specified
-    - ##### The LOAD button
-      - A file picker dialog will pop up, and will load the JSON file into the tables
-      - ###### Validation:
-        - If the JSON has invalid semantics, it will simply give the following error:
-          ![Snackbar Load Error](doc_images/snackbar_load_error.png)
-        - If the JSON is valid, but any JSON object doesn't contain the 'name' or 'amount' attribute, or the attributes
-          are `null`, it will simply default to `"Item ${index}"` for `name`, or `1.0` for `amount`
-        - If the amount is written in a string (eg "15") it will simply be converted to a `double`
-        - If the amount is smaller than 1.0 or bigger than 1 000 000 000, then it will get clamped down automatically
-        - If the type `name` is anything but `string`, it will be converted to a string
-        - Any character that isn't a lower-, uppercase (a-z, A-Z) dash(-) or a whitespace character will be filtered out
-          from `name`
-        - Example JSON:
-          ```json 
-          [
-            {"name" : "Salary", "amount": 30000},
-            {"amount" : 5000, "name": "Groceries", "day" : 3},
-            {"name" : null, "amount" : null},
-            {},
-            {"name" : true, "amount": false},
-            {"name" : ["JSON", "Lists"], "amount" : -9999999999999},
-            {"name" : {"name" : " Object", "amount": 99}, "amount": 999999999999999999999999999999},
-            {"name": "Incomplete"},
-            {"name" : "fake-number", "amount": "27"},
-            {"invalid attribute" : 0},
-            {"name": "!@#$%^&*()_-+=}][{:;|\\<,>.?/Interesting--()'' Values"}
+      - ##### The EDIT button
+        - This is how you would delete your items
+          ![Budget Table Delete](doc_images/budget_table_del.png)
+        - Pressing the normal X button next to each item would delete that item
+        - Pressing the X All button next to Total would delete the entire table
+        - There is no confirmation for any of this
+      - ##### The SAVE button
+        - Web
+          - Will save your items to your Downloads folder as JSON
+        - Windows
+          - A file picker dialog will pop up, and will save your file to the file path specified
+      - ##### The LOAD button
+        - A file picker dialog will pop up, and will load the JSON file into the tables
+          - ###### Validation:
+            - If the JSON has invalid semantics, it will simply give the following error:
+              ![Snackbar Load Error](doc_images/snackbar_load_error.png)
+            - If you cancel the dialog, you get this error:
 
-          ]
-          ```
-          will transform into:
-          ![Table Random Values](doc_images/table_random_values.png)
-          - If the JSON isn't a list of JSON objects and instead is just a single one, the app will only load 1 budget
-            item
-            Example JSON:
-          ```json 
-            {"name" : "Salary", "amount": 30000}
-          ```
-          will transform into:
-          ![Table Single Value](doc_images/table_single_value.png)
+            - If the JSON is valid, but any JSON object doesn't contain the 'name' or 'amount' attribute, or the
+              attributes
+              are `null`, it will simply default to `"Item ${index}"` for `name`, or `1.0` for `amount`
+            - If the amount is written in a string (eg "15") it will simply be converted to a `double`
+            - If the amount is smaller than 1.0 or bigger than 1 000 000 000, then it will get clamped down
+              automatically
+            - If the type `name` is anything but `string`, it will be converted to a string
+            - Any character that isn't a lower-, uppercase (a-z, A-Z) dash(-) or a whitespace character will be filtered
+              out
+              from `name`
+            - Any duplicate name entries will also be deleted, and only the last one will be accepted
+            - Example JSON:
+              ```json 
+              [
+               {"name" : "Salary", "amount": 30000},
+               {"name" : "Salary", "amount" : 28000},
+               {"amount" : 5000, "name": "Groceries", "day" : 3},
+               {"name" : null, "amount" : null},
+               {},
+               {"name" : true, "amount": false},
+               {"name" : ["JSON", "Lists"], "amount" : -9999999999999},
+               {"name" : {"name" : " Object", "amount": 99}, "amount": 999999999999999999999999999999},
+               {"name": "Incomplete"},
+               {"name" : "fake-number", "amount": "27"},
+               {"invalid attribute" : 0},
+               {"name": "!@#$%^&*()_-+=}][{:;|\\<,>.?/Interesting--()'' Values"}
+
+              ]
+              ```
+              will transform into:
+              ![Table Random Values](doc_images/table_random_values.png)
+              - If the JSON isn't a list of JSON objects and instead is just a single one, the app will only load 1
+                budget
+                item
+                Example JSON:
+              ```json 
+                {"name" : "Salary", "amount": 30000}
+              ```
+              will transform into:
+              ![Table Single Value](doc_images/table_single_value.png)
   - #### List View
   ![Budget List Income](doc_images/budget_list_income.png)
   ![Budget List Expense](doc_images/budget_list_expense.png)
@@ -161,7 +170,20 @@ powershell.exe -ExecutionPolicy Bypass -File .\build_w.ps1
     - The amount of that item
     - What % it contributes to the final amount/cost
 
-### Project Structure
+### Persistence
+
+- #### The following data is saved to a local database and is loaded automatically on app load:
+  - Your Name
+  - Budget Currency
+  - Budget Date
+  - Income Name Entry (from the Income Name TextField)
+  - Expense Name Entry (from the Expense Name TextField)
+  - Income Value Entry (from the Income Value Spinbox)
+  - Expense Value Entry (from the Expense Value Spinbox)
+  - Income Items
+  - Expense Items
+
+## Project Structure
 ![Project Structure](doc_images/project_structure.png)
 - **models**: Data structures (Budget items, months, etc.)
 - **screens**: The different pages that you navigate to
@@ -170,3 +192,22 @@ powershell.exe -ExecutionPolicy Bypass -File .\build_w.ps1
 - **widgets**: Reusable UI containers used across all screens
 - **app.dart**: Contains the main class for the entire app
 - **main.dart**: Starting point
+
+## License
+
+```Plain Text
+ Copyright © 2026 CodingDashUU
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <https://www.gnu.org/licenses/>.
+```

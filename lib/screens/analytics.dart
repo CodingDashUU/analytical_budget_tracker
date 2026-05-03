@@ -32,7 +32,6 @@ class AnalyticsPage extends StatefulWidget {
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
   int touchedIndex = -1;
-  static const int MAX_WIDTH = 1200;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +43,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         child: SingleChildScrollView(
           child: LayoutBuilder(
             builder: (context, constraints) {
-              final isLarge = constraints.maxWidth > MAX_WIDTH;
+              final isLarge = constraints.maxWidth > 1200;
               final isLargeLegend = constraints.maxWidth > 600;
               return Wrap(
                 spacing: 16,

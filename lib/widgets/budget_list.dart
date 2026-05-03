@@ -72,7 +72,7 @@ class _BudgetListState extends State<BudgetList> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.redAccent.withOpacity(0.1),
+        color: Colors.redAccent.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
       ),
       alignment: Alignment.centerRight,
@@ -105,7 +105,7 @@ class _BudgetCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -161,7 +161,7 @@ class _BudgetCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: (budgetType.representationColor).withOpacity(0.1),
+        color: (budgetType.representationColor).withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
       child: Icon(
@@ -212,7 +212,7 @@ class BudgetTotalTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.05),
+          color: Colors.black.withValues(alpha: 0.05),
           blurRadius: 10,
           offset: const Offset(0, 4),
         ),
@@ -279,7 +279,7 @@ class _ExpenseTotalTileState extends State<ExpenseTotalTile> {
       borderRadius: BorderRadius.circular(16),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.05),
+          color: Colors.black.withValues(alpha: 0.05),
           blurRadius: 10,
           offset: const Offset(0, 4),
         ),

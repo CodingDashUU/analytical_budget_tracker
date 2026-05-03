@@ -92,7 +92,7 @@ class _DonutChartState extends State<DonutChart>
           Text(
             '${budgetInfo.currency.value} ${widget.data[i].value.toStringAsFixed(2)}  •  $pct%',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withValues(alpha: 0.8),
               fontSize: 11,
             ),
           ),
@@ -117,7 +117,7 @@ class _DonutChartState extends State<DonutChart>
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
               decoration: BoxDecoration(
                 color: isHighlighted
-                    ? _colorAt(i).withOpacity(0.12)
+                    ? _colorAt(i).withValues(alpha: 0.12)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(6),
               ),
@@ -201,7 +201,7 @@ class _DonutChartState extends State<DonutChart>
                           : const BorderSide(color: Colors.transparent),
                       gradient: LinearGradient(
                         colors: [
-                          _colorAt(i).withOpacity(0.8),
+                          _colorAt(i).withValues(alpha: 0.8),
                           _colorAt(i),
                         ],
                         begin: Alignment.topCenter,

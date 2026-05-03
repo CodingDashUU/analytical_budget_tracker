@@ -218,7 +218,7 @@ class _BudgetTableState extends State<BudgetTable> {
                     // total row
                     DataRow(
                       color: WidgetStateProperty.all(
-                        widget.headerColor.withOpacity(0.15),
+                        widget.headerColor.withValues(alpha: 0.15),
                       ),
                       cells: [
                         DataCell(

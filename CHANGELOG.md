@@ -41,7 +41,7 @@ This is the changelog for the project 'analytical_budget_tracker', all releases 
     - Take-home: Income - Expenses
     - Verdict
         - SURPLUS: If take-home is higher than 0
-        - BREAKTHROUGH: If take-home is equal to 0
+      - BREAK-EVEN: If take-home is equal to 0
         - DEFICIT: If take-home is less than 0
 
 ##### Other

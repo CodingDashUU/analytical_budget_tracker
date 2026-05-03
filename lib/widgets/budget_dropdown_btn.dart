@@ -23,11 +23,11 @@ import '../models/budget_type.dart';
 import '../services/file_service.dart';
 
 class BudgetDropdownButton extends StatefulWidget {
-  Function pageSetState;
-  BudgetType type;
-  IconData icon;
+  final Function pageSetState;
+  final BudgetType type;
+  final IconData icon;
 
-  BudgetDropdownButton({
+  const BudgetDropdownButton({
     required this.pageSetState,
     required this.type,
     required this.icon,
